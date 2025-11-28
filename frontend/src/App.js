@@ -14,7 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home/>}></Route>
         <Route path="/result" element={<Result/>}></Route>
-        <Route path="/upload/:type" element={<Upload/>}></Route>
+        <Route path="/upload/:inputType" element={<Upload/>}></Route>
         <Route path="/select-input-options" element={<ChooseInputType/>}></Route>
       </Routes>
     </div>

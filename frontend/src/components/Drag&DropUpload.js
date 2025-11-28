@@ -1,17 +1,22 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
-export default function SingleImageUpload({ onUpload, headerText }) {
-  const [image, setImage] = useState(null);
+export default function SingleImageUpload({ onFileSelect, headerText, initialFile = null }) {
+  const [image, setImage] = useState(initialFile);
   const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef(null);
 
+  useEffect(() => {
+    setImage(initialFile);
+  }, [initialFile]);
+
   const handleFile = (file) => {
     if (!file) return;
-    if (!file.type.startsWith("image/")) {
+    if (!file.type || !file.type.startsWith("image/")) {
       alert("Please upload an image only.");
       return;
     }
     setImage(file);
+    if (onFileSelect) onFileSelect(file);
   };
 
   const onDrop = (e) => {
@@ -22,12 +27,9 @@ export default function SingleImageUpload({ onUpload, headerText }) {
     handleFile(file);
   };
 
-  const upload = () => {
-    if (!image) return alert("Please select an image.");
-
-    if (onUpload) {
-      onUpload(image); // send image to parent
-    }
+  const clearFile = () => {
+    setImage(null);
+    if (onFileSelect) onFileSelect(null);
   };
 
   return (
@@ -71,27 +73,20 @@ export default function SingleImageUpload({ onUpload, headerText }) {
       {image && (
         <div className="mt-4 flex items-center gap-4">
           <img
-            src={URL.createObjectURL(image)}
+            src={typeof image === 'string' ? image : URL.createObjectURL(image)}
             alt="preview"
             className="w-24 h-24 rounded-lg object-cover shadow"
           />
 
           <button
             className="text-red-600 underline"
-            onClick={() => setImage(null)}
+            onClick={clearFile}
           >
             Remove
           </button>
         </div>
       )}
 
-      {/* Upload Button */}
-      <button
-        onClick={upload}
-        className="mt-4 bg-green-800 hover:bg-green-700 text-white py-2 px-8 rounded-full text-lg font-medium"
-      >
-        Upload
-      </button>
     </div>
   );
 }
