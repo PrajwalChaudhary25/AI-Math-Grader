@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import SingleImageUpload from './Drag&DropUpload';
+import SingleImageUpload from '../components/Drag&DropUpload';
 import { useParams } from 'react-router-dom';
 
 

@@ -1,10 +1,10 @@
 
 import './App.css';
 import Navbar from './components/Navbar';
-import Home from './components/HomeSection'
-import Result from './components/ResultSection'
-import ChooseInputType from './components/SelectInputType'
-import Upload from './components/UploadPage'
+import Home from './pages/HomePage'
+import Result from './pages/ResultPage'
+import ChooseInputType from './pages/SelectInputPage'
+import Upload from './pages/UploadPage'
 import {Route, Routes} from 'react-router-dom';
 
 function App() {
