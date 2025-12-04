@@ -9,6 +9,7 @@ export default function SingleImageUpload({ onFileSelect, headerText, initialFil
     setImage(initialFile);
   }, [initialFile]);
 
+  // This function validates and sets images file
   const handleFile = (file) => {
     if (!file) return;
     if (!file.type || !file.type.startsWith("image/")) {
@@ -19,14 +20,16 @@ export default function SingleImageUpload({ onFileSelect, headerText, initialFil
     if (onFileSelect) onFileSelect(file);
   };
 
+  // This function handles events when files are dropped in the drop zone
   const onDrop = (e) => {
     e.preventDefault();
     setDragOver(false);
-
     const file = e.dataTransfer.files[0]; // only one file allowed
     handleFile(file);
   };
 
+  /* This function clears the file Uploaded in the Drop Zone 
+  when remove button is clicked*/
   const clearFile = () => {
     setImage(null);
     if (onFileSelect) onFileSelect(null);

@@ -5,6 +5,7 @@ import Home from './pages/HomePage'
 import Result from './pages/ResultPage'
 import ChooseInputType from './pages/SelectInputPage'
 import Upload from './pages/UploadPage'
+import RenderLatexPage from './pages/RenderLatexPage'
 import {Route, Routes} from 'react-router-dom';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Route path="/result" element={<Result/>}></Route>
         <Route path="/upload/:inputType" element={<Upload/>}></Route>
         <Route path="/select-input-options" element={<ChooseInputType/>}></Route>
+        <Route path="/render-latex" element={<RenderLatexPage/>}></Route>
       </Routes>
     </div>
   );
