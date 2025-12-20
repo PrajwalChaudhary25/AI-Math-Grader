@@ -134,7 +134,8 @@ def convert_image_to_latex(filepath, filename):
         # Call the Mathpix API to convert the image to LaTeX
         api_result = mathpix_client.image_new(
             file_path=filepath,
-            formats=['latex_styled', 'text']
+            formats=['latex_styled', 'text'],
+            idiomatic_eqn_arrays=True
         )
         
         # --- 3. Store Response in Cache ---
