@@ -1,18 +1,6 @@
 import json
 from pathlib import Path
-from mpxpy.mathpix_client import MathpixClient
-from config import CACHE_FOLDER, Mathpix_App_ID, Mathpix_App_Key
 
-# Initialize Mathpix Client
-try:
-    mathpix_client = MathpixClient(
-        app_id=Mathpix_App_ID, 
-        app_key=Mathpix_App_Key)
-except Exception as e:
-    print("Error initializing MathpixClient:", e)
-    mathpix_client = None
-    
-    
 def extract_latex(obj):
     if isinstance(obj, dict):
         if 'latex_styled' in obj and obj['latex_styled']:
@@ -31,6 +19,7 @@ def extract_latex(obj):
             if res:
                 return res
     return None
+
 
 def sanitize(obj):
     if isinstance(obj, dict):
@@ -57,39 +46,30 @@ def sanitize(obj):
         return None
 
 
-def convert_image_to_latex(filepath, filename):
-    cache_path = Path(CACHE_FOLDER) / f"{filename}.json"
+def convert_image_to_latex(client, filepath, filename, cache_folder):
+    cache_path = Path(cache_folder) / f"{filename}.json"
 
-    # Cache hit
     if cache_path.exists():
-        with open(cache_path, "r", encoding="utf-8") as f:
+        with open(cache_path, 'r', encoding='utf-8') as f:
             cached = json.load(f)
         return {
-            "success": True,
-            "source": "cache",
-            "latex": extract_latex(cached)
+            'success': True,
+            'source': 'cache',
+            'latex': extract_latex(cached) or 'Conversion Error'
         }
 
-    if not mathpix_client:
-        return {"success": False, "error": "Mathpix not configured"}
-
-    # API call
-    api_result = mathpix_client.image_new(
+    api_result = client.image_new(
         file_path=filepath,
-        formats=["latex_styled", "text"],
-        options_json={
-        "math_inline_delimiters": ["\\(", "\\)"],
-        "math_display_delimiters": ["\\[", "\\]"]
-        },
+        formats=['latex_styled', 'text'],
         idiomatic_eqn_arrays=True
     )
 
-    clean = sanitize(api_result)
-    with open(cache_path, "w", encoding="utf-8") as f:
-        json.dump(clean, f, indent=4)
+    serializable = sanitize(api_result)
+    with open(cache_path, 'w', encoding='utf-8') as f:
+        json.dump(serializable, f, indent=4)
 
     return {
-        "success": True,
-        "source": "api",
-        "latex": extract_latex(clean)
+        'success': True,
+        'source': 'api',
+        'latex': extract_latex(serializable) or 'Conversion Error'
     }
