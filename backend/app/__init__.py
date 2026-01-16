@@ -2,6 +2,7 @@ from flask import Flask
 from app.config import Config
 from app.extensions import cors
 from app.routes.latex import latex_bp
+from app.routes.preprocessing import preprocessing_bp
 
 def create_app():
     app = Flask(__name__)
@@ -10,5 +11,6 @@ def create_app():
     cors.init_app(app)
 
     app.register_blueprint(latex_bp)
+    app.register_blueprint(preprocessing_bp)
 
     return app
