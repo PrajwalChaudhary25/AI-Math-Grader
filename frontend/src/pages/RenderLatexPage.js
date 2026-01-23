@@ -8,6 +8,26 @@ function RenderLatexPage() {
   const location = useLocation();
   const latexData = location.state?.latex || "";
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+      try{
+        const res = await fetch("http://127.0.0.1:5000/preprocess",{
+          method: "POST",
+          headers: {
+             "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ latex: latexData }),
+        });
+        const data = await res.json();
+        console.log("preprocessing result:", data["steps"]);
+        if (data.success){
+          navigate('/result', { state: { latex: data["steps"] } });
+        }        }      
+      catch (error) {
+        console.error("Error fetching preprocessing result:", error);
+      }
+  }
+
   function parseLatexSegments(input) {
     const segments = [];
     let i = 0;
@@ -176,10 +196,19 @@ function RenderLatexPage() {
         <div className="flex justify-center mt-6">
           <button
             className="px-10 py-2 bg-[#976507] text-black text-xl rounded-3xl hover:bg-[#6b4703] hover:text-white active:scale-110 transition duration-300"
-            onClick={() => navigate('/result')}
+            onClick={() => navigate('/preprocessing-result', { state: { latex: latexData } })}
           >
             Start Grading
           </button>
+
+          <div className="flex justify-center mt-6">
+          <button
+            className="px-10 py-2 bg-[#976507] text-black text-xl rounded-3xl hover:bg-[#6b4703] hover:text-white active:scale-110 transition duration-300"
+            onClick={handleSubmit}
+          >
+            stepwise validation
+          </button>
+        </div>
         </div>
       </div>
     </div>

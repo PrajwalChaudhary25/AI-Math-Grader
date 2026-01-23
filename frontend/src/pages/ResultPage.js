@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
 
@@ -46,7 +47,10 @@ const MathStep = ({ step, isValid, comment }) => {
   );
 };
 
-const EquationViewer = ({ data }) => {
+const EquationViewer = () => {
+  const location = useLocation();
+  const latexData = location.state?.latex || "";
+  // console.log("solution", latexData);
   return (
     <div className="max-w-5xl mx-auto p-8 bg-white rounded-2xl shadow-2xl border border-slate-100">
       <header className="mb-8">
@@ -57,7 +61,7 @@ const EquationViewer = ({ data }) => {
       </header>
 
       <div className="space-y-4">
-        {data.map((item, index) => (
+        {latexData.map((item, index) => (
           <MathStep 
             key={index}
             step={item.step}
