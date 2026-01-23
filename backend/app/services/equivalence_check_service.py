@@ -103,8 +103,6 @@ def equations_equivalent(eq1, eq2, variable=None):
             
             # Try with log operations
             try:
-                from sympy import logcombine, expand_log
-                
                 expr1_combined = expand(logcombine(eq1, force=True))
                 expr2_combined = expand(logcombine(eq2, force=True))
                 

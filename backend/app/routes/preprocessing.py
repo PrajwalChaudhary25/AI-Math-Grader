@@ -9,7 +9,7 @@ def preprocess_data():
     latex = data.get("latex", "") if data else ""
     # Add preprocessing logic here
     steps = latex_to_steps(latex)
-    print(steps)
+    # print(steps)
     result = check_steps(steps)
     print("solution",result)
     return jsonify({'success': True, 'steps': result})
