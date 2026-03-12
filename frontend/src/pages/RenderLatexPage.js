@@ -194,21 +194,19 @@ function RenderLatexPage() {
         </div>
         
         <div className="flex justify-center mt-6">
-          <button
+          {/*<button
             className="px-10 py-2 bg-[#976507] text-black text-xl rounded-3xl hover:bg-[#6b4703] hover:text-white active:scale-110 transition duration-300"
             onClick={() => navigate('/preprocessing-result', { state: { latex: latexData } })}
           >
             Start Grading
-          </button>
+          </button>*/}
 
-          <div className="flex justify-center mt-6">
           <button
             className="px-10 py-2 bg-[#976507] text-black text-xl rounded-3xl hover:bg-[#6b4703] hover:text-white active:scale-110 transition duration-300"
             onClick={handleSubmit}
           >
             stepwise validation
           </button>
-        </div>
         </div>
       </div>
     </div>

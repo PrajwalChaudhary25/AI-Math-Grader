@@ -32,6 +32,7 @@ function HomeSection() {
         <h2 className="sm:text-[28px] text-[22px] text-black text-center">
           Scope of the Project
         </h2>
+        <div className="mt-[-20px] mb-5 min-w-28 h-[5px] bg-[#16610E] rounded-xl"></div>
         <div className="flex flex-col flex-wrap sm:flex-row justify-center items-center gap-16" >
           {/* Cards for the scope of the project*/}
           <div className="bg-[#FFA500] p-3 rounded-lg hover:scale-105 transition duration-900">
@@ -68,6 +69,12 @@ function HomeSection() {
           </div>
         </div>
       </div>
+
+      <footer className="flex flex-col justify-center items-center bg-black w-full py-5 mt-[-8px]">
+        <p className="text-[16px] sm:text-[20px] text-white mt-10 mb-5">
+          &copy; 2026 Stepwise Grading and Feedback System. All rights reserved.
+        </p>
+      </footer>
     </div>
   );
 }

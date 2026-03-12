@@ -47,7 +47,9 @@ function UploadPage() {
                     body: form,
                 });
                 const data = await res.json();
+                navigate("/render-latex", { state: { latex:data.results.question.latex + "@"+ data.results.answer.latex} });
                 console.log("Response from Flask:", data);
+                {/* data = */}
                 if (data.success) {
                     alert("Conversion successful!");
                 }
