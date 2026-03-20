@@ -19,6 +19,9 @@ def equations_equivalent(eq1, eq2, variable=None):
     """
     if variable is None:
         variable = symbols('x')
+        x = symbols('x')
+        y = symbols('y')
+        z = symbols('z')
     
     try:
         # If both are equations, check if their difference simplifies to 0

@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.utils.latex_preprocessing_utils import latex_to_steps 
 from app.services.symbolic_reasoning_module import check_steps
+from app.utils.latex_preprocessing_utils import extract_question
 preprocessing_bp = Blueprint('preprocessing', __name__)
 
 @preprocessing_bp.route('/preprocess', methods=['POST'])
@@ -9,10 +10,11 @@ def preprocess_data():
     latex = data.get("latex", "") if data else ""
     # Add preprocessing logic here
     steps = latex_to_steps(latex)
+    question = extract_question(latex)
     # print(steps)
     result = check_steps(steps)
     print("solution",result)
-    return jsonify({'success': True, 'steps': result})
+    return jsonify({'success': True, 'steps': result, 'question': question})
 
     
     

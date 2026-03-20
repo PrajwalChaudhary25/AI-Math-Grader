@@ -9,3 +9,11 @@ def latex_to_steps(latex_str):
     cleaned_arr = [re.sub(r'(\d)\s*([a-zA-Z])', r'\1*\2', item).strip() for item in cleaned_arr]
     cleaned_arr = [item for item in cleaned_arr if item]
     return cleaned_arr
+
+def extract_question(latex_str):
+    pattern = r"^(.*?)(?=@|\bSolution\b)"
+    match = re.search(pattern, latex_str, re.DOTALL | re.IGNORECASE)
+    if match:
+        return match.group(1).strip()
+    else:
+        return "No question found."
