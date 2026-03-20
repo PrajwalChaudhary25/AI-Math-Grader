@@ -1,4 +1,3 @@
-import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { InlineMath, BlockMath } from "react-katex";
 import "katex/dist/katex.min.css";
@@ -20,8 +19,9 @@ function RenderLatexPage() {
         });
         const data = await res.json();
         console.log("preprocessing result:", data["steps"]);
+        console.log("preprocessing result:", data);
         if (data.success){
-          navigate('/result', { state: { latex: data["steps"] } });
+          navigate('/result', { state: { latex: data["steps"], question: data["question"] } });
         }        }      
       catch (error) {
         console.error("Error fetching preprocessing result:", error);
@@ -202,7 +202,7 @@ function RenderLatexPage() {
           </button>*/}
 
           <button
-            className="px-10 py-2 bg-[#976507] text-black text-xl rounded-3xl hover:bg-[#6b4703] hover:text-white active:scale-110 transition duration-300"
+            className="px-10 py-2 bg-[#6b4703] text-white text-xl rounded-3xl hover:bg-[#976507] hover:text-black active:scale-110 transition duration-300"
             onClick={handleSubmit}
           >
             stepwise validation

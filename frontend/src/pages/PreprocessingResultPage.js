@@ -1,4 +1,3 @@
-import React, { use } from 'react';
 import { useLocation } from 'react-router-dom';
 import DisplayResult from '../components/DisplayResult';
 import { useEffect, useState } from 'react';
