@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate} from "react-router-dom";
 import katex from "katex";
 import "katex/dist/katex.min.css";
 import { InlineMath, BlockMath } from "react-katex";
@@ -9,13 +9,11 @@ const RobustLatexRenderer = ({
   isQuestion = false,
   marks,
   difficulty_level,
+  marksValue,
+  setMarksValue,
+  difficultyValue,
+  setDifficultyValue,
 }) => {
-  const [marksValue, setMarksValue] = React.useState(
-    marks === "unknown" ? "set_marks" : marks || "",
-  );
-  const [difficultyValue, setDifficultyValue] = React.useState(
-    difficulty_level || "Not specified",
-  );
 
   console.log(difficulty_level);
   if (!input) return null;
@@ -274,8 +272,47 @@ const MathStep = ({ step, isValid, comment }) => {
 
 const EquationViewer = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const latexData = location.state?.latex || "";
-  // console.log("solution", latexData);
+  
+  const [marksValue, setMarksValue] = React.useState(
+    location.state?.marks === "unknown" ? "set_marks" : location.state?.marks || "",
+  );
+  const [difficultyValue, setDifficultyValue] = React.useState(
+    location.state?.level || "Not specified",
+  );
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const handleScoringAndFeedback = async(e) => {
+    e.preventDefault();
+    const scoringData = {
+      question: location.state?.question || "No question provided",
+      marks: marksValue || location.state?.marks || "Not specified",
+      difficulty: difficultyValue || location.state?.level || "Not specified",
+      solution: latexData || [],
+    };
+    console.log(JSON.stringify(scoringData, null, 2));
+    setIsLoading(true);
+    try{
+        const res = await fetch("http://127.0.0.1:5000/score-and-feedback",{
+          method: "POST",
+          headers: {
+             "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ Data: scoringData }),
+        });
+        const data = await res.json();
+        console.log(data)
+        navigate('/score-and-feedback', { state: { report: data } });
+
+        }      
+      catch (error) {
+        console.error("Error fetching preprocessing result:", error);
+        setIsLoading(false);
+      }
+
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 py-8">
       <div className="max-w-5xl mx-auto p-8 bg-white rounded-2xl shadow-2xl border border-slate-100">
@@ -305,6 +342,10 @@ const EquationViewer = () => {
                   isQuestion={true}
                   marks={location.state?.marks}
                   difficulty_level={location.state?.level}
+                  marksValue={marksValue}
+                  setMarksValue={setMarksValue}
+                  difficultyValue={difficultyValue}
+                  setDifficultyValue={setDifficultyValue}
                 />
               </div>
             </div>
@@ -326,11 +367,90 @@ const EquationViewer = () => {
       {/* Action Buttons - Outside white container and centered */}
       <div className="mt-8 flex justify-center">
           <button
-            className="px-10 py-2 bg-[#FFA500] text-black text-[20px] rounded-3xl hover:bg-[#6b4703] hover:text-white active:scale-110 transition duration-300"
+            onClick={handleScoringAndFeedback}
+            disabled={isLoading}
+            className="px-10 py-2 bg-[#FFA500] text-black text-[20px] rounded-3xl hover:bg-[#6b4703] hover:text-white active:scale-110 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
             >
-            Scoring & Feedback
+            {isLoading && (
+              <div className="w-5 h-5 border-2 border-transparent border-t-black border-r-black rounded-full animate-spin" />
+            )}
+            {isLoading ? 'Processing...' : 'Scoring & Feedback'}
           </button>
       </div>
+
+      {/* Overlay Loader - AI Math Grader Theme */}
+      {isLoading && (
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
+          {/* Animated background elements */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-20 left-10 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute bottom-20 right-10 w-40 h-40 bg-cyan-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+            <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+          </div>
+
+          {/* Main Content Card */}
+          <div className="relative z-10 bg-white/95 backdrop-blur-sm rounded-3xl p-12 shadow-2xl max-w-md border border-blue-200/50">
+            {/* Header with gradient text */}
+            <div className="text-center mb-8">
+              <h3 className="text-3xl font-black bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 bg-clip-text text-transparent mb-2">
+                AI Math Grader
+              </h3>
+              <p className="text-slate-600 font-semibold text-sm">Processing Your Solution</p>
+            </div>
+
+            {/* Animated Math Equations Container */}
+            <div className="flex justify-center gap-6 mb-8 h-12">
+              {/* Equation 1 */}
+              <div className="text-2xl font-mono text-blue-600 animate-bounce" style={{ animationDelay: '0s' }}>
+                ∫
+              </div>
+              {/* AI Node - Central Spinner */}
+              <div className="relative w-12 h-12 flex items-center justify-center">
+                <div className="absolute inset-0 border-3 border-transparent border-t-blue-500 border-r-cyan-500 rounded-full animate-spin"></div>
+                <div className="absolute inset-2 border-2 border-transparent border-b-purple-500 border-l-blue-500 rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '2s' }}></div>
+                <span className="text-xl">⚙️</span>
+              </div>
+              {/* Equation 2 */}
+              <div className="text-2xl font-mono text-purple-600 animate-bounce" style={{ animationDelay: '0.2s' }}>
+                π
+              </div>
+            </div>
+
+            {/* Status Messages with animation */}
+            <div className="text-center space-y-3">
+              <p className="text-slate-800 font-bold text-lg">
+                Analyzing Mathematical Steps
+                <span className="inline-block ml-1">
+                  <span className="animate-pulse">.</span>
+                  <span className="animate-pulse" style={{ animationDelay: '0.2s' }}>.</span>
+                  <span className="animate-pulse" style={{ animationDelay: '0.4s' }}>.</span>
+                </span>
+              </p>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                Running AI evaluation on step correctness and providing detailed pedagogical feedback
+              </p>
+            </div>
+
+            {/* Progress indicators */}
+            <div className="mt-8 space-y-2">
+              <div className="flex justify-between text-xs text-slate-500 font-medium">
+                <span>Neural Analysis</span>
+                <span>Grade: <span className="text-blue-600 font-bold">∞%</span></span>
+              </div>
+              <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-blue-500 via-cyan-500 to-purple-500 rounded-full animate-pulse"
+                  style={{
+                    width: '100%',
+                    backgroundSize: '200% 100%',
+                    animation: 'pulse 2s ease-in-out infinite'
+                  }}
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
