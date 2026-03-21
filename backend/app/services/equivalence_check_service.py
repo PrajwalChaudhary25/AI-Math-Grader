@@ -89,7 +89,7 @@ def equations_equivalent(eq1, eq2, variable=None):
             
             # Method 1: Special handling for logarithmic equations
             # Extract and compare log arguments if both have logs
-            if lhs1.has(log) and lhs2.has(log) and rhs_match:
+            if lhs1.has(sym_log) and lhs2.has(sym_log) and rhs_match:
                 try:
                     # Combine logs in both expressions
                     lhs1_combined = logcombine(lhs1, force=True)
@@ -98,7 +98,7 @@ def equations_equivalent(eq1, eq2, variable=None):
                     # Extract argument of the log
                     def get_log_arg(expr):
                         """Get the argument (first arg) of a log expression."""
-                        if expr.is_Function and expr.func == log:
+                        if expr.is_Function and expr.func == sym_log:
                             return expr.args[0] if expr.args else None
                         return None
                     
@@ -269,8 +269,6 @@ def equations_equivalent(eq1, eq2, variable=None):
                 # For logarithm expressions, try expanding with change of base
                 if eq1.has(sym_log) or eq2.has(sym_log):
                     try:
-                        from sympy import expand_log, logcombine
-                        
                         # Try combining logs and expanding
                         eq1_expanded = expand_log(eq1_sim, force=True)
                         eq2_expanded = expand_log(eq2_sim, force=True)

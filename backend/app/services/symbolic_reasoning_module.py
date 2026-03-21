@@ -9,6 +9,10 @@ def check_steps(steps):
     """
     results = []
     
+    # Check if steps is empty
+    if not steps or len(steps) == 0:
+        return results
+    
     # Normalize and parse first step
     normalized_steps = [normalize_logs(step) for step in steps]
     prev_eqs = parse_math_step(normalized_steps[0])
