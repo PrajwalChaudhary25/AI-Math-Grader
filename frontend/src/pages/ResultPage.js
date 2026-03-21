@@ -240,10 +240,10 @@ const MathStep = ({ step, isValid, comment }) => {
   }, [step]);
 
   return (
-    <div className="flex items-center gap-4 mb-4 w-full group">
+    <div className="flex items-center gap-4 mb-4 group">
       {/* Math Container Box */}
       <div
-        className={`flex-1 p-5 rounded-lg border-2 transition-all duration-300 ${
+        className={`w-96 px-6 py-8 rounded-lg border-2 transition-all duration-300 ${
           isValid
             ? "border-green-500 bg-green-50 shadow-sm" // Green box for valid steps
             : "border-red-600 bg-red-50 shadow-md scale-[1.01]" // Red rectangle for invalid steps
@@ -277,7 +277,7 @@ const EquationViewer = () => {
   const latexData = location.state?.latex || "";
   // console.log("solution", latexData);
   return (
-    <div className="flex flex-col gap-2 justify-center items-center">
+    <div className="min-h-screen bg-slate-50 py-8">
       <div className="max-w-5xl mx-auto p-8 bg-white rounded-2xl shadow-2xl border border-slate-100">
         <header className="mb-8">
           <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
@@ -311,7 +311,7 @@ const EquationViewer = () => {
           </div>
         </header>
 
-        <div className="space-y-4">
+        <div className="space-y-4 flex flex-col items-center">
           {latexData.map((item, index) => (
             <MathStep
               key={index}
@@ -322,7 +322,15 @@ const EquationViewer = () => {
           ))}
         </div>
       </div>
-      <button>Marks and Feedback</button>
+
+      {/* Action Buttons - Outside white container and centered */}
+      <div className="mt-8 flex justify-center">
+          <button
+            className="px-10 py-2 bg-[#FFA500] text-black text-[20px] rounded-3xl hover:bg-[#6b4703] hover:text-white active:scale-110 transition duration-300"
+            >
+            Scoring & Feedback
+          </button>
+      </div>
     </div>
   );
 };
