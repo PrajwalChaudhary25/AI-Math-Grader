@@ -17,3 +17,27 @@ def extract_question(latex_str):
         return match.group(1).strip()
     else:
         return "No question found."
+    
+    
+def extract_marks(text):
+    # Only match marks in brackets/parens at the very end: [3], (4), [1+1], etc.
+    pattern = r'[\[\(]\s*(\d+(?:\s*\+\s*\d+)*)\s*(?:marks?)?\s*[\]\)]$'
+    matches = re.findall(pattern, text.strip(), re.IGNORECASE)
+    
+    if not matches:
+        return {"marks": "unknown", "level": "Not specified"}
+    
+    # Extract all numbers and sum them
+    total_marks = 0
+    for match in matches:
+        numbers = re.findall(r'\d+', match)
+        total_marks += sum(map(int, numbers))
+    
+    if total_marks > 3 and total_marks <= 5:
+        level = "Hard"
+    elif total_marks == 2:
+        level = "Medium"
+    else:
+        level = "Easy"
+        
+    return {"marks": total_marks, "level": level}

@@ -19,13 +19,11 @@ def equations_equivalent(eq1, eq2, variable=None):
     """
     if variable is None:
         variable = symbols('x')
-        x = symbols('x')
-        y = symbols('y')
-        z = symbols('z')
     
     try:
         # If both are equations, check if their difference simplifies to 0
         if is_equation(eq1) and is_equation(eq2):
+            
             lhs1 = eq1.lhs
             lhs2 = eq2.lhs
             rhs1 = eq1.rhs
@@ -91,7 +89,7 @@ def equations_equivalent(eq1, eq2, variable=None):
             
             # Method 1: Special handling for logarithmic equations
             # Extract and compare log arguments if both have logs
-            if lhs1.has(sym_log) and lhs2.has(sym_log) and rhs_match:
+            if lhs1.has(log) and lhs2.has(log) and rhs_match:
                 try:
                     # Combine logs in both expressions
                     lhs1_combined = logcombine(lhs1, force=True)
@@ -100,7 +98,7 @@ def equations_equivalent(eq1, eq2, variable=None):
                     # Extract argument of the log
                     def get_log_arg(expr):
                         """Get the argument (first arg) of a log expression."""
-                        if expr.is_Function and expr.func == sym_log:
+                        if expr.is_Function and expr.func == log:
                             return expr.args[0] if expr.args else None
                         return None
                     
@@ -228,16 +226,15 @@ def equations_equivalent(eq1, eq2, variable=None):
                 expr1_has_log = eq1.has(sym_log)
                 expr2_has_log = eq2.has(sym_log)
                 
+                # Simplify first so structurally different but equivalent
+                # expressions are caught before attempting solve()
+                eq1_sim = simplify(eq1)
+                eq2_sim = simplify(eq2)
+                if simplify(eq1_sim - eq2_sim) == 0:
+                    return True
+                
                 # If only one has log, they can't be equivalent unless proven symbolically
                 if expr1_has_log != expr2_has_log:
-                    # Only check symbolic equivalence, not numerical
-                    eq1_sim = simplify(eq1)
-                    eq2_sim = simplify(eq2)
-                    
-                    # Check if simplification removes the difference
-                    if simplify(eq1_sim - eq2_sim) == 0:
-                        return True
-                    
                     # Check numerical equivalence to 2 decimal places
                     try:
                         val1 = float(eq1_sim.evalf())
@@ -252,19 +249,28 @@ def equations_equivalent(eq1, eq2, variable=None):
                     # They're structurally different
                     return False
                 
-                eq1_sol = solve(eq1)
-                eq2_sol = solve(eq2)
-                if eq1_sol == eq2_sol:
-                    return True
-                
-                eq1_sim = simplify(eq1)
-                eq2_sim = simplify(eq2)
-                if eq1_sim == eq2_sim:
-                    return True
+                # Solve only when there is at most one symbol;
+                # multivariate expressions often raise NotImplementedError.
+                eq1_sol = None
+                eq2_sol = None
+                all_symbols = eq1_sim.free_symbols.union(eq2_sim.free_symbols)
+                if len(all_symbols) <= 1:
+                    try:
+                        target_var = next(iter(all_symbols), variable)
+                        eq1_sol = solve(eq1_sim, target_var)
+                        eq2_sol = solve(eq2_sim, target_var)
+                        if eq1_sol == eq2_sol:
+                            return True
+                    except Exception:
+                        # Ignore solve failures and continue with symbolic checks
+                        eq1_sol = None
+                        eq2_sol = None
                 
                 # For logarithm expressions, try expanding with change of base
                 if eq1.has(sym_log) or eq2.has(sym_log):
                     try:
+                        from sympy import expand_log, logcombine
+                        
                         # Try combining logs and expanding
                         eq1_expanded = expand_log(eq1_sim, force=True)
                         eq2_expanded = expand_log(eq2_sim, force=True)
@@ -349,6 +355,16 @@ def equations_equivalent(eq1, eq2, variable=None):
         print(f"Error checking equivalence: {e}")
         return False
 
+
+
+
+
+
+
+
+
+
+'''check if curr_eqs can be derived from prev_eqs using algebraic transformations, including handling of multiple branches from ± notation.'''
 def check_step_validity_algebraic(prev_eqs, curr_eqs):
     """
     Checks if current equation(s) can be algebraically derived from previous equation(s).
