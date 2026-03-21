@@ -4,7 +4,20 @@ import katex from "katex";
 import "katex/dist/katex.min.css";
 import { InlineMath, BlockMath } from "react-katex";
 
-const RobustLatexRenderer = ({ input, isQuestion = false }) => {
+const RobustLatexRenderer = ({
+  input,
+  isQuestion = false,
+  marks,
+  difficulty_level,
+}) => {
+  const [marksValue, setMarksValue] = React.useState(
+    marks === "unknown" ? "set_marks" : marks || "",
+  );
+  const [difficultyValue, setDifficultyValue] = React.useState(
+    difficulty_level || "Not specified",
+  );
+
+  console.log(difficulty_level);
   if (!input) return null;
 
   const segments = [];
@@ -19,12 +32,18 @@ const RobustLatexRenderer = ({ input, isQuestion = false }) => {
   };
 
   // --- 1. PRE-CHECK ---
-  const hasNoDelimiters = !input.includes('$') && !input.includes('\\(') && !input.includes('\\[');
-  const looksLikeRawLatex = input.includes('\\frac') || input.includes('\\text') || input.includes('\\log');
+  const hasNoDelimiters =
+    !input.includes("$") && !input.includes("\\(") && !input.includes("\\[");
+  const looksLikeRawLatex =
+    input.includes("\\frac") ||
+    input.includes("\\text") ||
+    input.includes("\\log");
 
   if (hasNoDelimiters && looksLikeRawLatex) {
     return (
-      <div className={`overflow-x-auto ${isQuestion ? "text-xl my-2" : "text-base my-1"}`}>
+      <div
+        className={`overflow-x-auto ${isQuestion ? "text-xl my-2" : "text-base my-1"}`}
+      >
         <BlockMath math={input} />
       </div>
     );
@@ -41,7 +60,10 @@ const RobustLatexRenderer = ({ input, isQuestion = false }) => {
         const endIndex = input.indexOf(endTag, envNameEnd);
         if (endIndex !== -1) {
           pushText();
-          segments.push({ type: "block", content: input.slice(i, endIndex + endTag.length) });
+          segments.push({
+            type: "block",
+            content: input.slice(i, endIndex + endTag.length),
+          });
           i = endIndex + endTag.length;
           continue;
         }
@@ -52,7 +74,10 @@ const RobustLatexRenderer = ({ input, isQuestion = false }) => {
       const closerIndex = input.indexOf(closer, i + 2);
       if (closerIndex !== -1) {
         pushText();
-        segments.push({ type: "block", content: input.slice(i + 2, closerIndex).trim() });
+        segments.push({
+          type: "block",
+          content: input.slice(i + 2, closerIndex).trim(),
+        });
         i = closerIndex + 2;
         continue;
       }
@@ -63,7 +88,10 @@ const RobustLatexRenderer = ({ input, isQuestion = false }) => {
       const closerIndex = input.indexOf(closer, i + (isShort ? 1 : 2));
       if (closerIndex !== -1) {
         pushText();
-        segments.push({ type: "inline", content: input.slice(i + (isShort ? 1 : 2), closerIndex).trim() });
+        segments.push({
+          type: "inline",
+          content: input.slice(i + (isShort ? 1 : 2), closerIndex).trim(),
+        });
         i = closerIndex + (isShort ? 1 : 2);
         continue;
       }
@@ -75,12 +103,18 @@ const RobustLatexRenderer = ({ input, isQuestion = false }) => {
 
   // --- 3. RENDERING ---
   return (
-    <div className={`leading-snug ${isQuestion ? "text-lg md:text-xl" : "text-base"}`}>
+    <div
+      className={`leading-snug ${isQuestion ? "text-lg md:text-xl" : "text-base"}`}
+    >
       {segments.map((seg, idx) => {
         if (seg.type === "text") {
-          return <span key={idx} className="font-medium align-middle">{seg.content}</span>;
+          return (
+            <span key={idx} className="font-medium align-middle">
+              {seg.content}
+            </span>
+          );
         }
-        
+
         if (seg.type === "inline") {
           return (
             <span key={idx} className="mx-1 inline-block align-middle">
@@ -90,18 +124,107 @@ const RobustLatexRenderer = ({ input, isQuestion = false }) => {
         }
 
         return (
-          <div key={idx} className={`overflow-x-auto text-left ${isQuestion ? "my-2" : "my-1"}`}>
+          <div
+            key={idx}
+            className={`overflow-x-auto text-left ${isQuestion ? "my-2" : "my-1"}`}
+          >
             {/* The wrapper below controls the math size specifically */}
-            <div style={{ fontSize: isQuestion ? '1.15em' : '1em' }} className="inline-block">
+            <div
+              style={{ fontSize: isQuestion ? "1.15em" : "1em" }}
+              className="inline-block"
+            >
               <BlockMath math={seg.content} />
             </div>
           </div>
         );
       })}
+
+      {/* Marks and Difficulty Level Display/Inputs (only shown for questions) */}
+      {isQuestion && (
+        <div className="mt-6 flex gap-4 items-center flex-wrap">
+          {/* Marks Display or Input */}
+          {marks && marks !== "unknown" ? (
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/20 border border-blue-500/50 rounded-full">
+              <span className="text-xs font-bold text-blue-300 uppercase tracking-wider">
+                Marks
+              </span>
+              <span className="text-xl font-bold text-blue-100">{marks}</span>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2">
+              <label className="text-white text-sm font-semibold">Marks</label>
+              <input
+                type="text"
+                value={marksValue}
+                onChange={(e) => setMarksValue(e.target.value)}
+                placeholder="set_marks"
+                className="px-4 py-2 w-32 bg-slate-800 text-white border border-slate-600 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+              />
+            </div>
+          )}
+
+          {/* Difficulty Level Display or Select */}
+          {difficulty_level && difficulty_level !== "Not specified" ? (
+            <div
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border ${
+                difficulty_level === "Easy"
+                  ? "bg-green-500/20 border-green-500/50"
+                  : difficulty_level === "Medium"
+                    ? "bg-amber-500/20 border-amber-500/50"
+                    : difficulty_level === "Hard"
+                      ? "bg-red-500/20 border-red-500/50"
+                      : "bg-slate-500/20 border-slate-500/50"
+              }`}
+            >
+              <span
+                className={`text-xs font-bold uppercase tracking-wider ${
+                  difficulty_level === "Easy"
+                    ? "text-green-300"
+                    : difficulty_level === "Medium"
+                      ? "text-amber-300"
+                      : difficulty_level === "Hard"
+                        ? "text-red-300"
+                        : "text-slate-300"
+                }`}
+              >
+                Difficulty
+              </span>
+              <span
+                className={`text-lg font-bold ${
+                  difficulty_level === "Easy"
+                    ? "text-green-100"
+                    : difficulty_level === "Medium"
+                      ? "text-amber-100"
+                      : difficulty_level === "Hard"
+                        ? "text-red-100"
+                        : "text-slate-100"
+                }`}
+              >
+                {difficulty_level}
+              </span>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2">
+              <label className="text-white text-sm font-semibold">
+                Difficulty Level
+              </label>
+              <select
+                value={difficultyValue}
+                onChange={(e) => setDifficultyValue(e.target.value)}
+                className="px-4 py-2 w-40 bg-slate-800 text-white border border-slate-600 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+              >
+                <option value="Not specified">Not specified</option>
+                <option value="Easy">Easy</option>
+                <option value="Medium">Medium</option>
+                <option value="Hard">Hard</option>
+              </select>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
-
 
 const MathStep = ({ step, isValid, comment }) => {
   const containerRef = useRef(null);
@@ -154,47 +277,52 @@ const EquationViewer = () => {
   const latexData = location.state?.latex || "";
   // console.log("solution", latexData);
   return (
-    <div className="max-w-5xl mx-auto p-8 bg-white rounded-2xl shadow-2xl border border-slate-100">
-      <header className="mb-8">
-        <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-          Mathematical Validation
-        </h2>
-        <p className="text-slate-500 mt-2">
-          Detailed breakdown of step-by-step logic.
-        </p>
-        {/* --- PREMIUM QUESTION CONTAINER --- */}
-<div className="mt-8 relative overflow-hidden rounded-2xl bg-slate-900 p-8 shadow-2xl border border-slate-700">
-  {/* Decorative background element for "pop" */}
-  <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-blue-500/10 rounded-full blur-3xl"></div>
-  
-  <div className="relative z-10">
-    <div className="flex items-center gap-2 mb-4">
-      <span className="h-px w-8 bg-blue-500"></span>
-      <span className="text-blue-400 font-black text-xs uppercase tracking-[0.2em]">
-        Problem Statement
-      </span>
-    </div>
+    <div className="flex flex-col gap-2 justify-center items-center">
+      <div className="max-w-5xl mx-auto p-8 bg-white rounded-2xl shadow-2xl border border-slate-100">
+        <header className="mb-8">
+          <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+            Mathematical Validation
+          </h2>
+          <p className="text-slate-500 mt-2">
+            Detailed breakdown of step-by-step logic.
+          </p>
+          {/* --- PREMIUM QUESTION CONTAINER --- */}
+          <div className="mt-8 relative overflow-hidden rounded-2xl bg-slate-900 p-8 shadow-2xl border border-slate-700">
+            {/* Decorative background element for "pop" */}
+            <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-blue-500/10 rounded-full blur-3xl"></div>
 
-    <div className="text-white drop-shadow-md">
-      <RobustLatexRenderer 
-        input={location.state?.question || "No question Provided"} 
-        isQuestion={true} // This triggers the bigger font
-      />
-    </div>
-  </div>
-</div>
-      </header>
+            <div className="relative z-10">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="h-px w-8 bg-blue-500"></span>
+                <span className="text-blue-400 font-black text-xs uppercase tracking-[0.2em]">
+                  Problem Statement
+                </span>
+              </div>
 
-      <div className="space-y-4">
-        {latexData.map((item, index) => (
-          <MathStep
-            key={index}
-            step={item.step}
-            isValid={item.valid}
-            comment={item.comment}
-          />
-        ))}
+              <div className="text-white drop-shadow-md">
+                <RobustLatexRenderer
+                  input={location.state?.question || "No question Provided"}
+                  isQuestion={true}
+                  marks={location.state?.marks}
+                  difficulty_level={location.state?.level}
+                />
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div className="space-y-4">
+          {latexData.map((item, index) => (
+            <MathStep
+              key={index}
+              step={item.step}
+              isValid={item.valid}
+              comment={item.comment}
+            />
+          ))}
+        </div>
       </div>
+      <button>Marks and Feedback</button>
     </div>
   );
 };

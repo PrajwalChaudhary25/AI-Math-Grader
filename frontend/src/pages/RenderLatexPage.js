@@ -21,7 +21,7 @@ function RenderLatexPage() {
         console.log("preprocessing result:", data["steps"]);
         console.log("preprocessing result:", data);
         if (data.success){
-          navigate('/result', { state: { latex: data["steps"], question: data["question"] } });
+          navigate('/result', { state: { latex: data["steps"], question: data["question"], marks : data["marks"], level: data["difficulty"] } });
         }        }      
       catch (error) {
         console.error("Error fetching preprocessing result:", error);
