@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import { InlineMath, BlockMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
 
-const scoreAndFeedback = () => {
+const ScoreAndFeedback = () => {
   // Data populated from the provided JSON
   const location = useLocation();
   const rawData = location.state?.report || ""
@@ -215,4 +215,4 @@ const scoreAndFeedback = () => {
   );
 };
 
-export default scoreAndFeedback;
+export default ScoreAndFeedback;
