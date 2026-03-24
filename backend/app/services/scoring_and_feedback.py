@@ -51,14 +51,15 @@ def grade_complete_solution(question_data, steps_list, total_marks, difficulty):
     
     GRADING INSTRUCTIONS:
     1. Look at each 'step' and 'parsed' version. 
-    2. Check if the transition from step(n) to step(n+1) is algebraically valid.
+    2. Check if the mathematical/algebraic work shown in that specific step is valid. is_correct should be True if the step itself is mathematically sound.
     3. Note the 'valid' flag and 'comment' provided in the data; these are hints from the symbolic engine.
-    4. Apply 'Error Carried Forward' logic: If Step 2 is wrong, but Step 3 correctly follows the logic of the wrong Step 2, award partial marks for Step 3.
-    5. 'technical_critique' should be for the student's logic, 'pedagogical_feedback' should be encouraging guidance.
-    6. If the step in step list is correct, you should mark it as correct and award marks accordingly. If it's incorrect, provide constructive feedback and do not award marks.
-    7. Follow the rule of error propagation: if a step is wrong then the subsequent steps after that are also wrong even if the logic is correct, so you should not award marks for those steps but you should provide feedback that the step is correct but it is based on a wrong step before it.
-    8. For each step_evaluation, include the 'step_content' field with the actual mathematical step/equation from the student's work (in LaTeX format).
-    9. Ensure all responses are in valid JSON format matching the required schema.
+    4. 'technical_critique' should evaluate the mathematical correctness of the step shown, 'pedagogical_feedback' should be encouraging guidance or point out missing pieces.
+    5. **STRICT RULE - CRITICAL**: If is_correct is True, then awarded_marks MUST be > 0. If is_correct is False, then awarded_marks MUST be 0. NO EXCEPTIONS. If the math shown is right, the step is correct and must be awarded marks.
+    6. Follow the rule of error propagation: if a step is algebraically wrong (is_correct: False) then subsequent steps are also wrong even if their logic appears correct. Do not award marks for subsequent steps, but note in feedback that they're based on an incorrect prior step.
+    7. For each step_evaluation, include the 'step_content' field with the actual mathematical step/equation from the student's work (in LaTeX format).
+    8. Distribute marks evenly across all correct steps. If total_marks is 4 and there are 8 correct steps, each correct step gets 0.5 marks.
+    9. Missing steps (like domain checks for logarithmic equations) should be addressed in the final_verdict, NOT by marking preceding correct steps as incorrect.
+    10. Ensure all responses are in valid JSON format matching the required schema.
     """
     
     response = client.models.generate_content(
