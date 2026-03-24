@@ -205,7 +205,7 @@ const ScoreAndFeedback = () => {
                 <Award size={16} /> Final Teacher's Summary
               </div>
               <p className="text-slate-600 text-md font-medium leading-relaxed italic px-4">
-                "{reportData.final_verdict}"
+                "{renderLatexText(reportData.final_verdict)}"
               </p>
             </div>
           </div>
