@@ -39,6 +39,90 @@ def equations_equivalent(eq1, eq2, variable=None):
                 except:
                     pass
             
+            # Method -1: Handle logarithm injection property
+            # If eq1 is log_a(A) = log_a(B) and eq2 is A = B, they are equivalent
+            # because log_a is one-to-one
+            try:
+                # Check if one equation has logs and the other doesn't
+                eq1_has_logs = lhs1.has(sym_log) or rhs1.has(sym_log)
+                eq2_has_logs = lhs2.has(sym_log) or rhs2.has(sym_log)
+                
+                # Pattern 1: eq1 has log_a(A) = log_a(B), eq2 has A = B
+                if eq1_has_logs and not eq2_has_logs:
+                    # Extract log arguments from both sides of eq1
+                    def get_log_parts(lhs_expr, rhs_expr):
+                        """Extract log arguments and base if both LHS and RHS are logs."""
+                        lhs_log_arg = None
+                        lhs_log_base = None
+                        rhs_log_arg = None
+                        rhs_log_base = None
+                        
+                        # Check if LHS is a log function
+                        if lhs_expr.is_Function and lhs_expr.func == sym_log:
+                            if len(lhs_expr.args) >= 2:
+                                lhs_log_arg = lhs_expr.args[0]
+                                lhs_log_base = lhs_expr.args[1]
+                        
+                        # Check if RHS is a log function
+                        if rhs_expr.is_Function and rhs_expr.func == sym_log:
+                            if len(rhs_expr.args) >= 2:
+                                rhs_log_arg = rhs_expr.args[0]
+                                rhs_log_base = rhs_expr.args[1]
+                        
+                        return lhs_log_arg, lhs_log_base, rhs_log_arg, rhs_log_base
+                    
+                    lhs1_arg, lhs1_base, rhs1_arg, rhs1_base = get_log_parts(lhs1, rhs1)
+                    
+                    # If both LHS and RHS of eq1 are logs with the same base
+                    if (lhs1_arg is not None and rhs1_arg is not None and
+                        lhs1_base is not None and rhs1_base is not None):
+                        
+                        # Check if bases are the same
+                        bases_match = simplify(lhs1_base - rhs1_base) == 0
+                        
+                        if bases_match:
+                            # Compare arguments with eq2's sides
+                            # eq2 should be: lhs1_arg = rhs1_arg
+                            lhs2_match = simplify(lhs2 - lhs1_arg) == 0
+                            rhs2_match = simplify(rhs2 - rhs1_arg) == 0
+                            
+                            if lhs2_match and rhs2_match:
+                                return True
+                            
+                            # Also check reversed
+                            lhs2_match_rev = simplify(lhs2 - rhs1_arg) == 0
+                            rhs2_match_rev = simplify(rhs2 - lhs1_arg) == 0
+                            
+                            if lhs2_match_rev and rhs2_match_rev:
+                                return True
+                
+                # Pattern 2: eq1 has A = B, eq2 has log_a(A) = log_a(B)
+                # (reverse of pattern 1)
+                if not eq1_has_logs and eq2_has_logs:
+                    lhs2_arg, lhs2_base, rhs2_arg, rhs2_base = get_log_parts(lhs2, rhs2)
+                    
+                    if (lhs2_arg is not None and rhs2_arg is not None and
+                        lhs2_base is not None and rhs2_base is not None):
+                        
+                        bases_match = simplify(lhs2_base - rhs2_base) == 0
+                        
+                        if bases_match:
+                            # Compare eq1's sides with log arguments
+                            lhs1_match = simplify(lhs1 - lhs2_arg) == 0
+                            rhs1_match = simplify(rhs1 - rhs2_arg) == 0
+                            
+                            if lhs1_match and rhs1_match:
+                                return True
+                            
+                            lhs1_match_rev = simplify(lhs1 - rhs2_arg) == 0
+                            rhs1_match_rev = simplify(rhs1 - lhs2_arg) == 0
+                            
+                            if lhs1_match_rev and rhs1_match_rev:
+                                return True
+                                
+            except Exception as e:
+                pass  # Continue to other methods
+            
             # Method 0: Handle exponent extraction FIRST (before other methods)
             # Pattern: eq1 is base^expr1 = base^expr2, eq2 is expr1 = expr2
             try:

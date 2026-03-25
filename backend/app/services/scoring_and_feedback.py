@@ -57,7 +57,13 @@ def grade_complete_solution(question_data, steps_list, total_marks, difficulty):
     5. **STRICT RULE - CRITICAL**: If is_correct is True, then awarded_marks MUST be > 0. If is_correct is False, then awarded_marks MUST be 0. NO EXCEPTIONS. If the math shown is right, the step is correct and must be awarded marks.
     6. Follow the rule of error propagation: if a step is algebraically wrong (is_correct: False) then subsequent steps are also wrong even if their logic appears correct. Do not award marks for subsequent steps, but note in feedback that they're based on an incorrect prior step.
     7. For each step_evaluation, include the 'step_content' field with the actual mathematical step/equation from the student's work (in LaTeX format).
-    8. Distribute marks evenly across all correct steps. If total_marks is 4 and there are 8 correct steps, each correct step gets 0.5 marks.
+    8. **MARK DISTRIBUTION BY IMPORTANCE**: Only assign marks to important/critical steps that directly determine correctness:
+       - Identify ONLY the critical steps (those that involve key techniques, transformations, or decisions)
+       - Skip trivial steps (pure simplification, routine algebra on already-correct work)
+       - Assign all marks only to these important steps, distributing proportionally
+       - Example: For a 10-mark problem, if only 3 steps are critical: Step 1 (key technique) = 3 marks, Step 3 (critical transformation) = 5 marks, Step 5 (final simplification) = 2 marks. Other routine steps = 0 marks
+       - Each correct critical step (is_correct=True) gets its assigned marks
+       - Each incorrect critical step (is_correct=False) gets 0 marks, and the student loses marks for that critical failure
     9. Missing steps (like domain checks for logarithmic equations) should be addressed in the final_verdict, NOT by marking preceding correct steps as incorrect.
     10. Ensure all responses are in valid JSON format matching the required schema.
     """

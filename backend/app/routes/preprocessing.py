@@ -15,7 +15,7 @@ def preprocess_data():
     other_details = extract_marks(question)
     marks = other_details["marks"]
     difficulty_level = other_details["level"]
-    # print(steps)
+    print(steps)
     result = check_steps(steps)
     print("solution",result)
     return jsonify({'success': True, 'steps': result, 'question': question, 'marks': marks, 'difficulty': difficulty_level})
