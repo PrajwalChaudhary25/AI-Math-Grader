@@ -104,7 +104,7 @@ add demo video here -->
 
 ### Pipeline Diagram
 <p align="center">
-<img src="assets/system-block-diagram.svg" sty width="320" alt="Alt text">
+<img src="assets/system-block-diagram.svg" sty width="250" alt="Alt text">
 </p>
 *Complete system architecture showing data flow from input image to final output*
 
