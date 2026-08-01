@@ -7,40 +7,36 @@
 
 An AI-powered system that automatically grades multi-step handwritten math solutions with step-by-step feedback. Combines OCR, symbolic reasoning, and a fine-tuned LLM to evaluate algebraic problems like a human instructor.
 
----
+<!-- ---
 
 ## 🎯 Project Showcase
 
+### System Interface
+
 ![System Demo](./assets/demo-screenshot.png)  
-*Screenshot of the system in action - showing uploaded math solution with step-by-step validation and final score*
+*Screenshot of the React web interface - Upload page or home page showing the UI design*
 
-**Live Example:**
-```
-Input: Handwritten algebraic equation solution
-      ↓
-OCR: Converts to LaTeX
-      ↓
-Validation: Checks each step symbolically
-      ↓
-Output: ✓ Step 1: Correct  (great work)
-        ✓ Step 2: Correct  (nice, now you are doing well)
-        ✗ Step 3: Incorrect (oh no you should have done that instead)
-        ━━━━━━━━━━━━━━━━━━━━━━━
-        Final Score: 2/3 marks
-        Feedback: "Good progress! Check your arithmetic in step 3.... Better luck next time"
-```
+**What to show here**: 
+- Your React app's home page / upload interface
+- Clean, user-friendly UI
+- Ready to accept handwritten math images
 
----
+### 📹 Demo Video (Optional)
+
+add demo video here -->
+
+<!-- --- -->
 
 ## 📋 Table of Contents
 
+- [Project Showcase](#-project-showcase)
 - [What It Does](#what-it-does)
 - [Key Features](#key-features)
 - [Dataset](#dataset)
+- [System Architecture](#system-architecture)
 - [Tech Stack](#tech-stack)
 - [Training & Results](#training--results)
 - [Quick Start](#quick-start)
-- [Architecture](#architecture)
 - [Documentation](#documentation)
 - [Team](#team)
 
@@ -104,6 +100,42 @@ Output: ✓ Step 1: Correct  (great work)
 
 **Data Pipeline**: Collection → OCR Extraction → Manual Verification → Cleaning → Augmentation → 2,797 final samples
 
+## System Architecture
+
+### Pipeline Diagram
+<p align="center">
+<img src="assets/system-block-diagram.svg" sty width="320" alt="Alt text">
+</p>
+*Complete system architecture showing data flow from input image to final output*
+
+**What to show here**: 
+- Block diagram from your Project Report (Figure 4-1)
+- Shows: Image → OCR → Parser → Validation → LLM → Output
+- Visual representation of how all components connect
+
+### Component Overview
+
+```
+Handwritten Image
+      ↓
+  [Mathpix OCR] ──→ LaTeX Format
+      ↓
+  [Regex Preprocessing] ──→ Clean Steps
+      ↓
+  [SymPy Parser] ──→ Symbolic Objects
+      ↓
+  [Symbolic Reasoning Engine] ──→ Step Validation
+      ↓
+  [DeepSeekMath-7B] ──→ Rubric Generation
+      ↓
+  [LLM Marking Engine] ──→ Score + Feedback
+```
+
+**Key Components:**
+- **Symbolic Engine**: Ensures mathematical correctness
+- **LLM**: Generates human-like explanations & rubrics
+- **Partial Marking**: Rewards partial progress algorithmically
+
 ## Tech Stack
 
 | Layer | Technology |
@@ -138,16 +170,36 @@ Output: ✓ Step 1: Correct  (great work)
 | **Parse Success Rate** | 98% | Valid JSON output generation |
 | **Model Convergence** | ✓ | Stable training with minimal overfitting |
 
-### Results Showcase
+<!-- ### Results Showcase
+
+These are **actual output examples** from the system when grading different solutions:
+
+#### Example 1: Perfect Solution ✅
 
 ![Results Example 1](./assets/result-example-full.png)  
-*Example 1: Perfect solution (3/3 marks) with full feedback*
+*Perfect solution (3/3 marks) - All steps correct, full feedback provided*
+
+**What's shown**: Input math image → Output: Full marks, positive feedback, congratulatory message
+
+---
+
+#### Example 2: Partial Credit ⚠️
 
 ![Results Example 2](./assets/result-example-partial.png)  
-*Example 2: Partial credit (2/3 marks) with error highlighting*
+*Partial credit (2/3 marks) - Some steps correct, some wrong, detailed error analysis*
+
+**What's shown**: Input math image → Output: Partial marks, error highlighting, which step went wrong
+
+---
+
+#### Example 3: Error Detection ❌
 
 ![Results Example 3](./assets/result-example-error.png)  
-*Example 3: Error detection (1/3 marks) with detailed explanation*
+*Error detection (1/3 marks) - Critical error caught, learning feedback provided*
+
+**What's shown**: Input math image → Output: Low marks, explanation of where calculation failed, suggestions
+
+--- -->
 
 **Key Achievements**:
 - ✅ Detects arithmetic errors in intermediate steps
@@ -189,45 +241,22 @@ npm start
 
 Open `http://localhost:3000` → Upload image → Get instant marks + feedback
 
-## Architecture
-
-```
-Handwritten Image
-      ↓
-  [Mathpix OCR] ──→ LaTeX Format
-      ↓
-  [Regex Preprocessing] ──→ Clean Steps
-      ↓
-  [SymPy Parser] ──→ Symbolic Objects
-      ↓
-  [Symbolic Reasoning Engine] ──→ Step Validation
-      ↓
-  [DeepSeekMath-7B] ──→ Rubric Generation
-      ↓
-  [LLM Marking Engine] ──→ Score + Feedback
-```
-
-**Key Components:**
-- **Symbolic Engine**: Ensures mathematical correctness
-- **LLM**: Generates human-like explanations & rubrics
-- **Partial Marking**: Rewards partial progress algorithmically
-
-## Media Assets
+<!-- ## Media Assets
 
 Store project images in the `./assets/` folder:
 
 ```
 assets/
-├── demo-screenshot.png              # Hero image - system in action
+├── demo-screenshot.png              # Hero image - React UI/interface
+├── demo-video.mp4                   # Optional - system in action video
+├── system-architecture.png          # System pipeline diagram
 ├── dataset-by-topic.png             # Bar chart - topic distribution
 ├── dataset-by-difficulty.png        # Bar chart - difficulty distribution
 ├── training-loss-curve.png          # Line graph - training curves
-├── result-example-full.png          # Screenshot - perfect solution
-├── result-example-partial.png       # Screenshot - partial credit
-└── result-example-error.png         # Screenshot - error detection
-```
-
-**How to add**: Replace the placeholder image paths with your actual screenshots and graphs from the project report.
+├── result-example-full.png          # Output screenshot - perfect solution
+├── result-example-partial.png       # Output screenshot - partial credit
+└── result-example-error.png         # Output screenshot - error detection
+``` -->
 
 ## Documentation
 
