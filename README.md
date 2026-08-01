@@ -63,8 +63,9 @@ add demo video here -->
 **Total Samples**: 2,797 question-rubric pairs (after augmentation)
 
 ### Distribution by Topic
-
-![Dataset Distribution by Topic](./assets/dataset-by-topic.png)  
+<p align="center">
+<img src="assets/dataset-by-topic.png" sty width="80%" alt="Alt text">
+</p>
 *Bar chart showing distribution across Simplification, Equations, and Logarithms*
 
 | Topic | Samples | % | Difficulty |
