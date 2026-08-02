@@ -7,25 +7,31 @@
 
 An AI-powered system that automatically grades multi-step handwritten math solutions with step-by-step feedback. Combines OCR, symbolic reasoning, and a fine-tuned LLM to evaluate algebraic problems like a human instructor.
 
-<!-- ---
+
 
 ## 🎯 Project Showcase
 
 ### System Interface
 
-![System Demo](./assets/demo-screenshot.png)  
-*Screenshot of the React web interface - Upload page or home page showing the UI design*
 
-**What to show here**: 
-- Your React app's home page / upload interface
-- Clean, user-friendly UI
-- Ready to accept handwritten math images
+<table>
+  <tr>
+    <td><img src="assets/home-page.png" width="300" alt="First Image"></td>
+    <td><img src="assets/input-types.png" width="300" alt="Fourth Image"></td>
+  </tr>
+  <tr>
+    <td><img src="assets/upload-interface.png" width="300" alt="Second Image"></td>
+    <td><img src="assets/rendered-latex.png" width="300" alt="Third Image"></td>
+  </tr>
+    <td colspan="2"><img src="assets\symbolic-reasoning-output.png" width="100%" alt="Wide Image"></td>
+  </tr>
+</table>
 
 ### 📹 Demo Video (Optional)
 
-add demo video here -->
+add demo video here 
 
-<!-- --- -->
+--- 
 
 ## 📋 Table of Contents
 
