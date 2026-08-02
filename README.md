@@ -35,9 +35,12 @@ An AI-powered system that automatically grades multi-step handwritten math solut
   </tr>
 </table>
 
-### 📹 Demo Video (Optional)
+### 📹 Demo Video
 
-add demo video here 
+
+https://github.com/user-attachments/assets/d0f3d5bd-874e-432e-8b16-1d0b2baeac84
+
+
 
 --- 
 
