@@ -238,7 +238,7 @@ cp .env.example .env
 # Edit .env with your Mathpix credentials
 
 # Run backend
-python app.py
+flask --app run run
 
 # In another terminal: Frontend setup
 cd frontend
