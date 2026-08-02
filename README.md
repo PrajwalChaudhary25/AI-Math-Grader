@@ -177,13 +177,13 @@ Handwritten Image
 | **Parse Success Rate** | 98% | Valid JSON output generation |
 | **Model Convergence** | ✓ | Stable training with minimal overfitting |
 
-<!-- ### Results Showcase
+### Results Showcase
 
 These are **actual output examples** from the system when grading different solutions:
 
 #### Example 1: Perfect Solution ✅
 
-![Results Example 1](./assets/result-example-full.png)  
+![Results Example 1](./assets/all-correct.png)  
 *Perfect solution (3/3 marks) - All steps correct, full feedback provided*
 
 **What's shown**: Input math image → Output: Full marks, positive feedback, congratulatory message
@@ -192,8 +192,8 @@ These are **actual output examples** from the system when grading different solu
 
 #### Example 2: Partial Credit ⚠️
 
-![Results Example 2](./assets/result-example-partial.png)  
-*Partial credit (2/3 marks) - Some steps correct, some wrong, detailed error analysis*
+![Results Example 2](./assets/partially-correct.png)  
+*Partial credit (3.25/4 marks) - Some steps correct, some wrong, detailed error analysis*
 
 **What's shown**: Input math image → Output: Partial marks, error highlighting, which step went wrong
 
@@ -201,12 +201,12 @@ These are **actual output examples** from the system when grading different solu
 
 #### Example 3: Error Detection ❌
 
-![Results Example 3](./assets/result-example-error.png)  
-*Error detection (1/3 marks) - Critical error caught, learning feedback provided*
+![Results Example 3](./assets/incorrect.png)  
+*Error detection (0/2 marks) - Critical error caught, learning feedback provided*
 
-**What's shown**: Input math image → Output: Low marks, explanation of where calculation failed, suggestions
+**What's shown**: Input math image → Output: zero marks, explanation of where calculation failed, suggestions
 
---- -->
+---
 
 **Key Achievements**:
 - ✅ Detects arithmetic errors in intermediate steps
@@ -247,23 +247,6 @@ npm start
 ```
 
 Open `http://localhost:3000` → Upload image → Get instant marks + feedback
-
-<!-- ## Media Assets
-
-Store project images in the `./assets/` folder:
-
-```
-assets/
-├── demo-screenshot.png              # Hero image - React UI/interface
-├── demo-video.mp4                   # Optional - system in action video
-├── system-architecture.png          # System pipeline diagram
-├── dataset-by-topic.png             # Bar chart - topic distribution
-├── dataset-by-difficulty.png        # Bar chart - difficulty distribution
-├── training-loss-curve.png          # Line graph - training curves
-├── result-example-full.png          # Output screenshot - perfect solution
-├── result-example-partial.png       # Output screenshot - partial credit
-└── result-example-error.png         # Output screenshot - error detection
-``` -->
 
 ## Documentation
 
