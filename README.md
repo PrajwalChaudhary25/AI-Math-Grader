@@ -7,8 +7,16 @@
 
 An AI-powered system that automatically grades multi-step handwritten math solutions with step-by-step feedback. Combines OCR, symbolic reasoning, and a fine-tuned LLM to evaluate algebraic problems like a human instructor.
 
+---
 
+## 🏆 Project Recognition
 
+**Best Major Project Award** - IOE Thapathali Campus (2025)
+
+![Award Certificate](./assets/award-certification.jpg)  
+*<p align="center">Recognized as one of the best major projects among 12 project in BCT batch 078</p>*
+
+---
 ## 🎯 Project Showcase
 
 ### System Interface
@@ -36,12 +44,14 @@ add demo video here
 ## 📋 Table of Contents
 
 - [Project Showcase](#-project-showcase)
+- [Project Recognition](#-project-recognition)
 - [What It Does](#what-it-does)
 - [Key Features](#key-features)
 - [Dataset](#dataset)
 - [System Architecture](#system-architecture)
 - [Tech Stack](#tech-stack)
-- [Training & Results](#training--results)
+- [Training](#training)
+- [Results Showcase](#results-showcase)
 - [Quick Start](#quick-start)
 - [Documentation](#documentation)
 - [Team](#team)
@@ -153,7 +163,7 @@ Handwritten Image
 | **OCR** | Mathpix API |
 | **Infrastructure** | Google Colab|
 
-## Training & Results
+## Training
 
 ### Model Training Curves
 
@@ -177,11 +187,11 @@ Handwritten Image
 | **Parse Success Rate** | 98% | Valid JSON output generation |
 | **Model Convergence** | ✓ | Stable training with minimal overfitting |
 
-### Results Showcase
+## Results Showcase
 
 These are **actual output examples** from the system when grading different solutions:
 
-#### Example 1: Perfect Solution ✅
+### Example 1: Perfect Solution ✅
 
 ![Results Example 1](./assets/all-correct.png)  
 *Perfect solution (3/3 marks) - All steps correct, full feedback provided*
@@ -190,7 +200,7 @@ These are **actual output examples** from the system when grading different solu
 
 ---
 
-#### Example 2: Partial Credit ⚠️
+### Example 2: Partial Credit ⚠️
 
 ![Results Example 2](./assets/partially-correct.png)  
 *Partial credit (3.25/4 marks) - Some steps correct, some wrong, detailed error analysis*
@@ -199,7 +209,7 @@ These are **actual output examples** from the system when grading different solu
 
 ---
 
-#### Example 3: Error Detection ❌
+### Example 3: Error Detection ❌
 
 ![Results Example 3](./assets/incorrect.png)  
 *Error detection (0/2 marks) - Critical error caught, learning feedback provided*
